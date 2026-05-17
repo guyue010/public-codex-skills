@@ -5,6 +5,10 @@ description: Build, audit, harden, or productize a Feishu/Lark bot bridge that r
 
 # Feishu Bot Bridge
 
+## Acknowledgement
+
+This skill and bridge pattern were inspired by Zara's open-source Feishu/Lark-to-Claude bridge work: `https://github.com/zarazhangrui/feishu-claude-code-bridge`. The connection approach, productization checklist, and setup logic here reference the framework and design ideas she shared. Thanks to Zara for the contribution and public sharing; this skill is meant to respect the original work while encouraging shared learning and collaborative innovation.
+
 ## Core Shape
 
 Build the bridge as a long-running service, not as a static config file.

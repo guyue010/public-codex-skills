@@ -1,9 +1,9 @@
 ---
-name: feishu-bot-bridge
-description: Build, audit, harden, or productize a Feishu/Lark bot bridge that receives chat messages through event subscription or long connection, routes them to an AI agent or local CLI, and replies back to Feishu. Use when implementing a Zara-style lark-channel-bridge clone, diagnosing duplicate replies/self-triggering/history replay, creating setup/doctor/start commands, designing App ID/Secret storage, or documenting Feishu Open Platform bot permissions and event setup.
+name: feishu-to-codex-bridge
+description: Build, audit, harden, or productize a Feishu/Lark to Codex bridge that receives chat messages through event subscription or long connection, routes them to Codex, OpenAI, or a local CLI, and replies back to Feishu. Use when implementing a Zara-style lark-channel-bridge adaptation for Codex, diagnosing duplicate replies/self-triggering/history replay, creating setup/doctor/start commands, designing App ID/Secret storage, or documenting Feishu Open Platform bot permissions and event setup.
 ---
 
-# Feishu Bot Bridge
+# Feishu to Codex Bridge
 
 ## Acknowledgement
 
@@ -17,7 +17,7 @@ Build the bridge as a long-running service, not as a static config file.
 Feishu/Lark bot
   -> event subscription, usually long connection for local-first use
   -> bridge service
-  -> agent adapter, such as OpenAI API, Codex CLI, Claude CLI, or another tool
+  -> Codex or agent adapter, such as Codex CLI, OpenAI API, Claude CLI, or another tool
   -> Feishu reply/card/file/document action
 ```
 

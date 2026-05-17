@@ -1,4 +1,0 @@
-interface:
-  display_name: "Feishu Bot Bridge"
-  short_description: "Build and harden Feishu/Lark bot bridges."
-  default_prompt: "Use this skill to design, implement, verify, or package a Feishu/Lark bot bridge that connects chat messages to an AI agent or local CLI."

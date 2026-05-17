@@ -1,6 +1,6 @@
-# Feishu Bot Bridge Skill
+# Feishu to Codex Bridge Skill
 
-Build, audit, harden, or productize a Feishu/Lark bot bridge that receives chat messages, routes them to an AI agent or local CLI, and replies back to Feishu.
+Build, audit, harden, or productize a Feishu/Lark to Codex bridge that receives chat messages, routes them to Codex, OpenAI, or a local CLI, and replies back to Feishu.
 
 ## Acknowledgement
 
@@ -12,7 +12,7 @@ The bridge structure, setup flow, and productization checklist in this skill ref
 
 ## What This Skill Covers
 
-- Feishu/Lark bot bridge architecture.
+- Feishu/Lark to Codex bridge architecture.
 - Long-connection versus webhook runtime choices.
 - Open Platform permission and event checklist.
 - Guardrails for duplicate replies, self-triggering, and history replay.

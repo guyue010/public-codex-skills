@@ -1,6 +1,6 @@
 # Feishu Open Platform Checklist
 
-Use this as a user-facing checklist when setting up a bot bridge.
+Use this as a user-facing checklist when setting up a Feishu to Codex bridge.
 
 ## App Basics
 

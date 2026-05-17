@@ -1,0 +1,4 @@
+interface:
+  display_name: "XHS Publish Note"
+  short_description: "Publish image notes to Xiaohongshu via Chrome creator studio."
+  default_prompt: "Publish a Xiaohongshu image note from a short idea, preparing the image if needed, uploading it in Chrome Creator Studio, filling title and body, and confirming publish success."

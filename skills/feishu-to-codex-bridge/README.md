@@ -16,6 +16,9 @@ The bridge structure, setup flow, and productization checklist in this skill ref
 - Long-connection versus webhook runtime choices.
 - Open Platform permission and event checklist.
 - Guardrails for duplicate replies, self-triggering, and history replay.
+- Feishu in-chat slash commands such as `/new`, `/status`, `/ws`, `/stop`, `/timeout`, `/ps`, `/reconnect`, and `/doctor`.
+- Card-based UX for help, status, workspace, config, streaming output, and stop actions.
+- Runtime state design for sessions, workspaces, media, process registry, and logs.
 - Local and cloud deployment considerations.
 - Configuration and secret-handling guidance.
 

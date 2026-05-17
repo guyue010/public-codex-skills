@@ -53,3 +53,7 @@ Optional:
 - Group chat: mention the bot explicitly.
 - Confirm exactly one status message and one final reply.
 - Restart the bridge and confirm old messages are ignored.
+- Send `/help`, `/status`, `/new`, and `/stop` to confirm command routing.
+- If cards are enabled, confirm card buttons trigger `card.action.trigger`.
+- In a group, confirm plain messages without `@bot` are ignored and `@all` is never answered.
+- If media is enabled, send an image/file and confirm the agent receives a local file path, not only a message placeholder.

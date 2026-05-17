@@ -77,7 +77,9 @@ Key lessons to preserve:
 - Store config under a dedicated home directory, not scattered project files.
 - Include `ps` and `stop` commands because multiple long connections for one app cause random event delivery.
 - Make Open Platform requirements explicit; even Zara's wizard still tells users to manually confirm scopes and events.
-- Treat sessions, workspaces, media, process registry, and logs as first-class runtime state.
+- Treat sessions, workspaces, media, process registry, logs, in-chat commands, and card interactions as first-class runtime state.
+- Preserve the user-facing message strategy: private chats respond directly; group chats should normally require `@bot`; ignore `@all`; document any override in `/config`.
+- Consider streaming/status cards, quick-message batching, active-run interruption, and file/image handoff as product features rather than incidental implementation details.
 
 ## Recommended Minimal CLI
 
@@ -85,17 +87,18 @@ For a reusable bridge, implement these host commands:
 
 ```text
 bridge start [-c config]
-bridge doctor
 bridge ps
 bridge stop <id|#>
 bridge init
+bridge doctor
+bridge --help
 ```
 
-The first version can keep `init` simple: create a config template, set file permissions, and print the exact Feishu Open Platform checklist. Add QR/app creation only after confirming the Feishu API flow is reliable.
+The first version can keep `init` simple: create a config template, set file permissions, and print the exact Feishu Open Platform checklist. Add QR/app creation only after confirming the Feishu API flow is reliable. If multiple local bridge processes use the same app, detect that before `start` and offer a safe choice such as continue, kill old, or abort.
 
 ## Feishu In-Chat Commands
 
-Start small:
+Implement commands in two layers. The MVP layer should be stable before adding cards or workspace controls:
 
 ```text
 /help
@@ -105,15 +108,71 @@ Start small:
 /stop
 ```
 
-Add later:
+The fuller Zara-inspired command set is:
 
 ```text
-/config
+/new
+/reset
+/cd <path>
 /ws list
 /ws save <name>
 /ws use <name>
+/ws remove <name>
+/status
+/config
+/stop
+/timeout [N|off|default]
+/ps
+/exit <id|#>
+/reconnect
 /doctor
+/help
 ```
+
+Command behavior to preserve:
+
+- `/new` and `/reset`: clear the current chat session.
+- `/cd <path>`: change the current working directory and reset the session.
+- `/ws list`: list named workspaces, preferably as a card with buttons.
+- `/ws save <name>`: save the current working directory as a named workspace.
+- `/ws use <name>`: switch to a named workspace and reset the session.
+- `/ws remove <name>`: delete a named workspace.
+- `/status`: show cwd, session, agent mode, process id, and connection state, preferably as a card.
+- `/config`: adjust preferences such as group mention requirement, status style, streaming/card detail, and timeout defaults.
+- `/stop`: stop the current active run; also expose a stop button on long-running cards.
+- `/timeout [N|off|default]`: set or clear idle timeout for the current session.
+- `/ps`: list bridge processes registered on this machine and identify the process handling the reply.
+- `/exit <id|#>`: terminate a selected bridge process; self-exit should be graceful.
+- `/reconnect`: force long-connection reconnect when the bot is silent after network issues.
+- `/doctor [description]`: summarize recent logs and the user's description for self-diagnosis.
+- `/help`: return a compact help card.
+- Unknown `/xxx`: pass through to the agent only when it is not a reserved bridge command.
+
+## Feishu UX And Message Strategy
+
+- Private chat: respond to plain text by default.
+- Group or topic chat: require `@bot` by default.
+- Never respond to `@all`.
+- Cloud document comments should require `@bot` if supported.
+- Quick consecutive messages can be batched into one agent request.
+- A new user message during an active run may interrupt the old run or queue behind it; make this policy explicit.
+- Use cards for `/help`, `/status`, `/ws list`, `/config`, long-running status, and stop actions when card events are enabled.
+- Streaming cards can show model text, tool calls, and status in one message instead of sending many separate replies.
+
+## Recommended Runtime Data Directory
+
+For a productized local-first bridge, prefer a dedicated home directory over project-local files:
+
+```text
+~/.feishu-codex-bridge/config.json
+~/.feishu-codex-bridge/sessions.json
+~/.feishu-codex-bridge/workspaces.json
+~/.feishu-codex-bridge/processes.json
+~/.feishu-codex-bridge/media/<chatId>/
+~/.feishu-codex-bridge/logs/YYYY-MM-DD.log
+```
+
+Use restrictive permissions for credentials. Rotate logs, clean media caches, and mask secrets before using logs in `/doctor`.
 
 ## Common Failure Modes
 
@@ -122,6 +181,10 @@ Add later:
 - **Answers old messages**: bridge restarted and Feishu replayed events; drop events older than startup time.
 - **Works locally but not on phone later**: local bridge stopped because computer slept/shut down; use cloud or hybrid mode.
 - **Secret exposure**: rotate App Secret/API key, never paste secrets into chat, keep local config out of Git.
+- **Group noise**: group messages trigger without `@bot`; enforce mention policy and ignore `@all`.
+- **Agent appears frozen**: local CLI or API call hangs; add idle timeout, `/stop`, and `/doctor`.
+- **Wrong workspace**: session points to a deleted or unintended cwd; show cwd in `/status` and reset after `/cd` or `/ws use`.
+- **Media not visible to agent**: download files/images to a safe local path and pass that path explicitly.
 
 ## When To Use References
 

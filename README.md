@@ -7,7 +7,7 @@ This repository contains public, sanitized skill templates and workflows. It is 
 ## Skills
 
 - `skills/xhs-publish-note` - publish image-based Xiaohongshu notes through Chrome and Creator Studio.
-- `skills/feishu-to-codex-bridge` - design, audit, and productize a Feishu/Lark to Codex bridge that routes messages to Codex, OpenAI, or a local CLI.
+- `skills/feishu-to-codex-bridge` - design, audit, and productize a Feishu/Lark to Codex bridge that routes messages to Codex, OpenAI, or a local CLI. Includes Open Platform setup, slash commands, card interactions, workspace/session handling, process control, logs, media handoff, and safety guards.
 
 ## Safety Rules
 

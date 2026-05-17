@@ -8,6 +8,11 @@
 - Registers running processes and exposes `ps` / `stop`.
 - Uses long connection for Feishu/Lark events.
 - Routes Feishu messages to a local CLI agent, originally Claude Code.
+- Maintains one session per chat/topic so conversation can continue across turns.
+- Supports streaming cards so text and tool calls appear in one live-updating card.
+- Supports active-run interruption and quick consecutive message batching.
+- Supports workspace switching and media/file download handoff.
+- Uses in-chat slash commands and card buttons as the primary operator interface.
 
 ## What Zara Still Requires Manually
 
@@ -44,6 +49,73 @@ Zara keeps:
 - `logs/YYYY-MM-DD.log`: structured logs
 
 This is a useful template for productizing a bridge beyond a prototype `.env`.
+
+## In-Chat Slash Commands To Reuse
+
+Zara's README documents a fuller command surface than the initial Feishu to Codex Bridge MVP. Useful commands to preserve or adapt:
+
+| Command | Reusable behavior |
+|---|---|
+| `/new` / `/reset` | Clear the current chat session. |
+| `/cd <path>` | Switch working directory and reset the session. |
+| `/ws list` | List named workspaces, ideally with card buttons. |
+| `/ws save <name>` | Save the current cwd as a named workspace. |
+| `/ws use <name>` | Switch to a named workspace. |
+| `/ws remove <name>` | Remove a named workspace. |
+| `/status` | Show current cwd, session, agent, connection, and process status. |
+| `/config` | Adjust preferences such as group mention behavior, reply style, tool-call display, and timeout defaults. |
+| `/stop` | Stop the current active run, also available as a card button. |
+| `/timeout [N|off|default]` | Configure idle timeout for the current session. |
+| `/ps` | List active local bridge processes and identify the current one. |
+| `/exit <id|#>` | Terminate a selected bridge process. |
+| `/reconnect` | Force WebSocket or long-connection reconnect. |
+| `/doctor [description]` | Feed recent logs plus the user's description to the agent for diagnosis. |
+| `/help` | Return a help card. |
+| unknown `/xxx` | Pass through to the agent only when not reserved by the bridge. |
+
+## Feishu Message Strategy To Reuse
+
+- Private chats reply to direct messages.
+- Groups and topic groups should require `@bot` by default.
+- Plain group messages without `@bot` should be ignored.
+- `@all` should never trigger the bot.
+- Cloud document comments should require `@bot` when supported.
+- Mention policy should be configurable, but safe defaults matter.
+
+## Card And Interaction Patterns
+
+Zara treats cards as a control surface, not just decoration:
+
+- `/help`: command reference card.
+- `/status`: current cwd/session/agent/process card.
+- `/ws list`: workspace list with selection buttons.
+- `/config`: preference card with toggles/buttons.
+- long-running run: streaming card with text, tool calls, and stop button.
+- `/stop`: can be triggered from text command or card button.
+
+For a Codex bridge, keep a simple text status reply as the first version, then add cards once duplicate reply and self-trigger guards are stable.
+
+## Host CLI Details To Reuse
+
+Zara's host CLI surface:
+
+```text
+lark-channel-bridge start [-c <config>]
+lark-channel-bridge ps
+lark-channel-bridge stop <id|#>
+lark-channel-bridge --help
+```
+
+Additional placeholder areas in the README include `status`, `doctor`, `handover`, `workspace`, and `service`. For a Codex version, these are useful roadmap labels even if the first release only ships `start`, `doctor`, `ps`, `stop`, and `init`.
+
+When multiple `start` processes use the same app, events may be randomly delivered to one long connection. The bridge should detect this and offer a safe operator choice before starting another process.
+
+## FAQ Lessons To Reuse
+
+- If the agent hangs, `/status` and `/new` should be easy recovery paths.
+- Idle timeout can terminate a stuck child process after no output.
+- Media bugs are common; downloaded file paths and cleanup behavior should be explicit.
+- Migration from older config/cache locations should be a first-class command once public users exist.
 
 ## Feature Areas To Compare
 
@@ -91,6 +163,10 @@ This is a useful template for productizing a bridge beyond a prototype `.env`.
 - config cards
 - help cards
 - buttons for stop/workspace/config
+- help card
+- command passthrough rules
+- group mention policy
+- ignore `@all`
 
 ### Media
 
@@ -115,5 +191,8 @@ This is a useful template for productizing a bridge beyond a prototype `.env`.
 3. Move from project `.env` to `~/.feishu-codex-bridge/config.json` with `0600` permissions.
 4. Add `init` that creates config and prints the Open Platform checklist.
 5. Add allowlist for user open ids and chat ids.
-6. Add media download only after text handling is stable.
-7. Add cards/streaming only after duplicate reply and self-trigger issues are solved.
+6. Add full in-chat command routing: `/new`, `/reset`, `/status`, `/stop`, `/help`, then `/ws`, `/cd`, `/config`, `/timeout`, `/ps`, `/exit`, `/reconnect`, `/doctor`.
+7. Add message batching and active-run interruption policy.
+8. Add media download only after text handling is stable.
+9. Add cards/streaming only after duplicate reply and self-trigger issues are solved.
+10. Add migration and service/cloud deployment docs once users depend on the bridge.

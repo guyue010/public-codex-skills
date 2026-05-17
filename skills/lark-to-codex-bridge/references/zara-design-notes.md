@@ -52,7 +52,7 @@ This is a useful template for productizing a bridge beyond a prototype `.env`.
 
 ## In-Chat Slash Commands To Reuse
 
-Zara's README documents a fuller command surface than the initial Feishu to Codex Bridge MVP. Useful commands to preserve or adapt:
+Zara's README documents a fuller command surface than the initial Lark to Codex Bridge MVP. Useful commands to preserve or adapt:
 
 | Command | Reusable behavior |
 |---|---|
@@ -184,11 +184,11 @@ When multiple `start` processes use the same app, events may be randomly deliver
 - OpenAI/API budget limits
 - cloud deployment secret handling
 
-## Recommended Roadmap For feishu-codex-bridge
+## Recommended Roadmap For lark-codex-bridge
 
 1. Keep the current minimal bridge stable: doctor, start, self-filter, history-filter, dedupe, status reply.
 2. Add process registry plus `ps` and `stop`.
-3. Move from project `.env` to `~/.feishu-codex-bridge/config.json` with `0600` permissions.
+3. Move from project `.env` to `~/.lark-codex-bridge/config.json` with `0600` permissions.
 4. Add `init` that creates config and prints the Open Platform checklist.
 5. Add allowlist for user open ids and chat ids.
 6. Add full in-chat command routing: `/new`, `/reset`, `/status`, `/stop`, `/help`, then `/ws`, `/cd`, `/config`, `/timeout`, `/ps`, `/exit`, `/reconnect`, `/doctor`.

@@ -1,9 +1,9 @@
 ---
-name: feishu-to-codex-bridge
-description: Build, audit, harden, or productize a Feishu/Lark to Codex bridge that receives chat messages through event subscription or long connection, routes them to Codex, OpenAI, or a local CLI, and replies back to Feishu. Use when implementing a Zara-style lark-channel-bridge adaptation for Codex, diagnosing duplicate replies/self-triggering/history replay, creating setup/doctor/start commands, designing App ID/Secret storage, or documenting Feishu Open Platform bot permissions and event setup.
+name: lark-to-codex-bridge
+description: Build, audit, harden, or productize a Lark/Feishu to Codex bridge that receives chat messages through event subscription or long connection, routes them to Codex, OpenAI, or a local CLI, and replies back to Lark. Use when implementing a Zara-style lark-channel-bridge adaptation for Codex, diagnosing duplicate replies/self-triggering/history replay, creating setup/doctor/start commands, designing App ID/Secret storage, or documenting Lark Open Platform bot permissions and event setup.
 ---
 
-# Feishu to Codex Bridge
+# Lark to Codex Bridge
 
 ## Acknowledgement
 
@@ -14,11 +14,11 @@ This skill and bridge pattern were inspired by Zara's open-source Feishu/Lark-to
 Build the bridge as a long-running service, not as a static config file.
 
 ```text
-Feishu/Lark bot
+Lark/Feishu bot
   -> event subscription, usually long connection for local-first use
   -> bridge service
   -> Codex or agent adapter, such as Codex CLI, OpenAI API, Claude CLI, or another tool
-  -> Feishu reply/card/file/document action
+  -> Lark reply/card/file/document action
 ```
 
 Keep secrets out of source control. Store local credentials in a gitignored config file with restrictive permissions, or store cloud credentials as platform secrets.
@@ -164,12 +164,12 @@ Command behavior to preserve:
 For a productized local-first bridge, prefer a dedicated home directory over project-local files:
 
 ```text
-~/.feishu-codex-bridge/config.json
-~/.feishu-codex-bridge/sessions.json
-~/.feishu-codex-bridge/workspaces.json
-~/.feishu-codex-bridge/processes.json
-~/.feishu-codex-bridge/media/<chatId>/
-~/.feishu-codex-bridge/logs/YYYY-MM-DD.log
+~/.lark-codex-bridge/config.json
+~/.lark-codex-bridge/sessions.json
+~/.lark-codex-bridge/workspaces.json
+~/.lark-codex-bridge/processes.json
+~/.lark-codex-bridge/media/<chatId>/
+~/.lark-codex-bridge/logs/YYYY-MM-DD.log
 ```
 
 Use restrictive permissions for credentials. Rotate logs, clean media caches, and mask secrets before using logs in `/doctor`.

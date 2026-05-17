@@ -1,0 +1,4 @@
+interface:
+  display_name: "Lark to Codex Bridge"
+  short_description: "Build and harden Lark/Feishu to Codex bridges."
+  default_prompt: "Use this skill to design, implement, verify, or package a Lark/Feishu bridge that connects chat messages to Codex, OpenAI, or a local CLI."
